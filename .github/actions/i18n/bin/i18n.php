@@ -39,10 +39,18 @@ class Generate_Translation_Strings {
 	public $valid_post_types = array( 'post', 'page' );
 
 	/**
+	 * The textdomain to use.
+	 *
+	 * @var string $textdomain
+	 */
+	public $textdomain = 'wporg';
+
+	/**
 	 * Initialze the class, set up the properties based on CLI args.
 	 */
 	public function __construct() {
-		$args = getopt( '', [ 'url::', 'taxonomies::', 'no_taxonomies', 'post_types::', 'no_post_types' ] );
+		$options = array( 'url::', 'taxonomies::', 'no_taxonomies', 'post_types::', 'no_post_types', 'textdomain::' );
+		$args = getopt( '', $options );
 
 		if ( ! empty( $args['url'] ) && filter_var( $args['url'], FILTER_VALIDATE_URL ) ) {
 			$this->endpoint_base = $args['url'];
@@ -62,6 +70,19 @@ class Generate_Translation_Strings {
 
 		if ( isset( $args['no_post_types'] ) ) {
 			$this->valid_post_types = array();
+		}
+
+		if ( ! empty( $args['textdomain'] ) ) {
+			// Pulled from `sanitize_title_with_dashes`.
+			$textdomain = strip_tags( $args['textdomain'] );
+			$textdomain = strtolower( $textdomain );
+			$textdomain = preg_replace( '/&.+?;/', '', $textdomain );
+			$textdomain = str_replace( '.', '-', $textdomain );
+			$textdomain = preg_replace( '/[^%a-z0-9 _-]/', '', $textdomain );
+			$textdomain = preg_replace( '/\s+/', '-', $textdomain );
+			$textdomain = preg_replace( '|-+|', '-', $textdomain );
+			$textdomain = trim( $textdomain, '-' );
+			$this->textdomain = $textdomain;
 		}
 	}
 
@@ -325,7 +346,7 @@ class Generate_Translation_Strings {
 
 			foreach ( $terms as $term ) {
 				$name = addcslashes( $term['name'], "'" );
-				$file_content .= "_x( '{$name}', '$label term name', 'wporg-patterns' );\n";
+				$file_content .= "_x( '{$name}', '$label term name', '{$this->textdomain}' );\n";
 
 				if ( 'cli' === php_sapi_name() ) {
 					echo "$name\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -333,7 +354,7 @@ class Generate_Translation_Strings {
 
 				if ( $term['description'] ) {
 					$description = addcslashes( $term['description'], "'" );
-					$file_content .= "_x( '{$description}', '$label term description', 'wporg-patterns' );\n";
+					$file_content .= "_x( '{$description}', '$label term description', '{$this->textdomain}' );\n";
 				}
 			}
 		}
@@ -356,7 +377,7 @@ class Generate_Translation_Strings {
 
 			foreach ( $this->get_posts( $post_type ) as $page ) {
 				$title = addcslashes( $page['title']['rendered'], "'" );
-				$file_content .= "_x( '{$title}', 'Page title', 'wporg-patterns' );\n";
+				$file_content .= "_x( '{$title}', 'Post title', '{$this->textdomain}' );\n";
 
 				if ( 'cli' === php_sapi_name() ) {
 					echo "$title\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
