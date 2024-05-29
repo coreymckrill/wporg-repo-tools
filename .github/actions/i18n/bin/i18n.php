@@ -377,7 +377,7 @@ class Generate_Translation_Strings {
 
 			foreach ( $this->get_posts( $post_type ) as $page ) {
 				$title = addcslashes( $page['title']['rendered'], "'" );
-				$file_content .= "_x( '{$title}', 'Post title', '{$this->textdomain}' );\n";
+				$file_content .= "_x( '{$title}', '{$post_type['slug']} title', '{$this->textdomain}' );\n";
 
 				if ( 'cli' === php_sapi_name() ) {
 					echo "$title\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
