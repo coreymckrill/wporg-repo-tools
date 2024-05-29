@@ -397,7 +397,7 @@ class Generate_Translation_Strings {
 /**
  * Generated file for translation strings.
  *
- * Used to import additional strings into the pattern-directory translation project.
+ * Used to import additional strings into the GlotPress translation project.
  *
  * ⚠️ This is a generated file. Do not edit manually. See bin/i18n.php.
  * ⚠️ Do not require or include this file anywhere.
