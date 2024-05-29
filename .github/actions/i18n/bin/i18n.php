@@ -393,6 +393,7 @@ class Generate_Translation_Strings {
 		$file_name = 'translation-strings.php';
 		$file_header = <<<HEADER
 <?php
+// phpcs:disable
 /**
  * Generated file for translation strings.
  *
