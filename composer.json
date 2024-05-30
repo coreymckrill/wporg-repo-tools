@@ -8,5 +8,8 @@
 	},
 	"bin": [
 		"bin/update-configs"
-	]
+	],
+	"require": {
+		"rmccue/requests": "1.8.1"
+	}
 }

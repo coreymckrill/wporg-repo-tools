@@ -1,0 +1,38 @@
+name: "i18n"
+description: "Generate translation strings from content"
+
+inputs:
+  token:
+    description: "A GitHub token."
+    required: true
+    type: string
+
+  args:
+    description: "CLI args passed through to i18n script."
+    required: false
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup PHP with PECL extension
+      uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # v2.25.4 
+      with:
+        php-version: "7.4"
+      env:
+        COMPOSER_TOKEN: ${{ inputs.token }}
+
+    - name: Install composer dependencies
+      shell: bash
+      run: |
+        composer install || composer update wporg/*
+        composer require rmccue/requests:1.8.1
+
+    - name: Run translation script
+      shell: bash
+      run: php ${{ github.action_path }}/bin/i18n.php ${{ inputs.args }}
+
+    - name: Reset the composer files
+      shell: bash
+      run: |
+        git checkout composer.json composer.lock
