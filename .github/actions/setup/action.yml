@@ -29,17 +29,28 @@ runs:
       env:
         COMPOSER_TOKEN: ${{ inputs.token }}
 
-    - name: Install all dependencies
+    - name: Install all dependencies (yarn)
       shell: bash
+      if: ${{ 'yarn' == inputs.packageManager }}
       run: |
         composer install || composer update wporg/*
         yarn
-
-    - name: Setup configs
-      shell: bash
-      run: |
         yarn setup:tools
 
-    - name: Build all included projects.
+    - name: Build all included projects (yarn)
       shell: bash
+      if: ${{ 'yarn' == inputs.packageManager }}
       run: yarn workspaces run build
+
+    - name: Install all dependencies (npm)
+      shell: bash
+      if: ${{ 'npm' == inputs.packageManager }}
+      run: |
+        composer install || composer update wporg/*
+        npm install
+        npm run setup:tools
+
+    - name: Build all included projects (npm)
+      shell: bash
+      if: ${{ 'npm' == inputs.packageManager }}
+      run: npm run build --workspaces --if-present
