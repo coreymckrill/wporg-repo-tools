@@ -15,4 +15,4 @@ runs:
     - name: Lint PHP
       shell: bash
       run: yarn lint:php
-      if: fileExists('phpcs.xml')
+      if: ${{ files.exists('phpcs.xml') }}
