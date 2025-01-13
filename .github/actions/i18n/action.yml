@@ -15,6 +15,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install svn
+      shell: bash
+      run: |
+        sudo apt install subversion
+
     - name: Setup PHP with PECL extension
       uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # v2.25.4 
       with:
