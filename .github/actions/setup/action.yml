@@ -16,6 +16,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install svn
+      shell: bash
+      run: |
+        sudo apt install subversion
+
     - name: Install NodeJS
       uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
       with:
